@@ -233,8 +233,8 @@ h2 {
 .inputFile {
   width: 100%;
   padding: 10px;
-  background-color: #f8fafc;
-  border: 2px solid #e2e8f0;
+  background-color: #0f172a;
+  border: 2px solid var(--border);
   border-radius: 10px;
   cursor: pointer;
   font-size: 0.9rem;
@@ -245,7 +245,7 @@ h2 {
 
 /* Styling the actual button inside the input */
 .inputFile::file-selector-button {
-  background-color: #667eea;
+  background-color: var(--primary);
   color: white;
   padding: 8px 16px;
   border: none;
@@ -256,13 +256,8 @@ h2 {
   transition: background 0.2s ease;
 }
 
-.inputFile:hover {
-  border-color: #667eea;
-  background-color: #f1f5f9;
-}
-
 .inputFile::file-selector-button:hover {
-  background-color: #5a67d8;
+  background-color: var(--primary-hover);
 }
 
 /* Optional: Subtle focus state for accessibility */
