@@ -37,7 +37,7 @@ export default function App() {
           <button className="logout-btn" onClick={() => logout()}>
             Logout
           </button>
-          <TodoApp />
+          <TodoApp session={session} />
         </div>
       ) : (
         <Login />

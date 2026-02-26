@@ -10,34 +10,22 @@ interface Todo {
   isCompleted?: boolean;
 }
 
-const TodoApp: React.FC = () => {
+interface TodoAppProps {
+  session: any;
+}
+
+const TodoApp: React.FC<TodoAppProps> = ({ session }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [userId, setUserId] = useState<string>("");
+  const [userId, setUserId] = useState<string>(session.user.id);
 
   // --- Frontend-only Edit State ---
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editTitle, setEditTitle] = useState<string>("");
   const [editDesc, setEditDesc] = useState<string>("");
 
-  const fetchUser = async () => {
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError) {
-      console.error("Error fetching user:", userError);
-      return;
-    }
-    if (user) {
-      console.log("User Id:", user.id);
-      setUserId(user.id);
-    }
-    return user?.id;
-  };
-
-  const fetchTasks = async (userId: string) => {
+  const fetchTasks = async () => {
     const { error: taskError, data } = await supabase
       .from("tasks")
       .select("*")
@@ -52,8 +40,7 @@ const TodoApp: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const userId = await fetchUser();
-      await fetchTasks(userId || "");
+      await fetchTasks();
     };
     fetchData();
   }, []);
