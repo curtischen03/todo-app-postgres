@@ -74,6 +74,14 @@ const TodoApp: React.FC<TodoAppProps> = ({ session }) => {
           ]);
         },
       )
+      .on(
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "tasks" },
+        (payload) => {
+          console.log("New task deleted:", payload.old);
+          setTodos((prev) => prev.filter((t) => t.id !== payload.old.id));
+        },
+      )
       .subscribe((status) => {
         console.log("Subscription status:", status);
       });
