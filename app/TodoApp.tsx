@@ -8,6 +8,7 @@ interface Todo {
   title: string;
   description: string;
   isCompleted?: boolean;
+  imageUrl: string | null;
 }
 
 interface TodoAppProps {
@@ -24,6 +25,7 @@ const TodoApp: React.FC<TodoAppProps> = ({ session }) => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editTitle, setEditTitle] = useState<string>("");
   const [editDesc, setEditDesc] = useState<string>("");
+  const [taskImage, setTaskImage] = useState<File | null>(null);
 
   const fetchTasks = async () => {
     const { error: taskError, data } = await supabase
@@ -35,7 +37,14 @@ const TodoApp: React.FC<TodoAppProps> = ({ session }) => {
       console.error("Error fetching tasks:", taskError);
       return;
     }
-    setTodos(data || []);
+    const mapped_data = data.map((obj) => ({
+      id: obj.id,
+      title: obj.title,
+      description: obj.description,
+      isCompleted: false,
+      imageUrl: obj.image_url,
+    }));
+    setTodos(mapped_data || []);
   };
 
   useEffect(() => {
@@ -59,6 +68,7 @@ const TodoApp: React.FC<TodoAppProps> = ({ session }) => {
               id: payload.new.id,
               title: payload.new.title,
               description: payload.new.description,
+              imageUrl: payload.new.image_url,
               isCompleted: false,
             },
           ]);
@@ -72,23 +82,45 @@ const TodoApp: React.FC<TodoAppProps> = ({ session }) => {
     };
   }, []);
 
+  const uploadImage = async (file: File): Promise<string | null> => {
+    const filePath = `${file.name}-${Date.now()}`;
+    const { error } = await supabase.storage
+      .from("tasks-images")
+      .upload(filePath, file);
+    if (error) {
+      console.error("Error uploading image:", error);
+      return null;
+    }
+
+    const { data } = await supabase.storage
+      .from("tasks-images")
+      .getPublicUrl(filePath);
+    return data.publicUrl;
+  };
   const addTask = async (): Promise<void> => {
+    let imageUrl: string | null = null;
+    if (taskImage) {
+      imageUrl = await uploadImage(taskImage);
+      console.log("Uploaded image URL:", imageUrl);
+    }
     if (title.trim() === "") return;
     const newTodo: Todo = {
       id: Date.now(),
       title,
       description,
+      imageUrl: imageUrl,
       isCompleted: false,
     };
 
     const { error } = await supabase
       .from("tasks")
-      .insert({ title, description, user_id: userId });
+      .insert({ title, description, user_id: userId, image_url: imageUrl });
     if (error) return console.error("Error adding task:", error);
 
     //setTodos([...todos, newTodo]);
     setTitle("");
     setDescription("");
+    setTaskImage(null);
   };
 
   const deleteTask = async (id: number): Promise<void> => {
@@ -127,6 +159,12 @@ const TodoApp: React.FC<TodoAppProps> = ({ session }) => {
     );
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setTaskImage(e.target.files[0]);
+    }
+  };
+
   return (
     <div className="todo-container">
       <h2>Task Manager</h2>
@@ -143,6 +181,12 @@ const TodoApp: React.FC<TodoAppProps> = ({ session }) => {
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description (Optional)..."
           className="desc-input"
+        />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="inputFile"
         />
         <button className="add-btn" onClick={addTask}>
           Add Task
@@ -192,6 +236,9 @@ const TodoApp: React.FC<TodoAppProps> = ({ session }) => {
                 >
                   <strong>{todo.title}</strong>
                   {todo.description && <p>{todo.description}</p>}
+                  {todo.imageUrl && (
+                    <img src={todo.imageUrl} className="todoImg" />
+                  )}
                 </div>
                 <div className="item-actions">
                   <button
