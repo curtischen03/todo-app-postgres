@@ -82,6 +82,26 @@ const TodoApp: React.FC<TodoAppProps> = ({ session }) => {
           setTodos((prev) => prev.filter((t) => t.id !== payload.old.id));
         },
       )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "tasks" },
+        (payload) => {
+          console.log("New task updated:", payload.new);
+          setTodos((prev) =>
+            prev.map((t) =>
+              t.id === payload.new.id
+                ? {
+                    id: payload.new.id,
+                    title: payload.new.title,
+                    description: payload.new.description,
+                    imageUrl: payload.new.image_url,
+                    isCompleted: false,
+                  }
+                : t,
+            ),
+          );
+        },
+      )
       .subscribe((status) => {
         console.log("Subscription status:", status);
       });
