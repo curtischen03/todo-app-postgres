@@ -45,6 +45,33 @@ const TodoApp: React.FC<TodoAppProps> = ({ session }) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const channel = supabase.channel("tasks-channel");
+    channel
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "tasks" },
+        (payload) => {
+          console.log("New task added:", payload.new);
+          setTodos((prev) => [
+            ...prev,
+            {
+              id: payload.new.id,
+              title: payload.new.title,
+              description: payload.new.description,
+              isCompleted: false,
+            },
+          ]);
+        },
+      )
+      .subscribe((status) => {
+        console.log("Subscription status:", status);
+      });
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   const addTask = async (): Promise<void> => {
     if (title.trim() === "") return;
     const newTodo: Todo = {
@@ -59,7 +86,7 @@ const TodoApp: React.FC<TodoAppProps> = ({ session }) => {
       .insert({ title, description, user_id: userId });
     if (error) return console.error("Error adding task:", error);
 
-    setTodos([...todos, newTodo]);
+    //setTodos([...todos, newTodo]);
     setTitle("");
     setDescription("");
   };
