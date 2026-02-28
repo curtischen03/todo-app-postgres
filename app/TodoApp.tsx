@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from "react";
+import React, { useState, useEffect } from "react";
 import { supabase } from "./supabase-client";
 import "./TodoApp.css";
 
@@ -21,7 +21,7 @@ const TodoApp: React.FC<TodoAppProps> = ({ session }) => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [userId, setUserId] = useState<string>(session.user.id);
 
-  // --- Frontend-only Edit State ---
+  // Frontend-only Edit State
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editTitle, setEditTitle] = useState<string>("");
   const [editDesc, setEditDesc] = useState<string>("");
@@ -145,7 +145,6 @@ const TodoApp: React.FC<TodoAppProps> = ({ session }) => {
       .insert({ title, description, user_id: userId, image_url: imageUrl });
     if (error) return console.error("Error adding task:", error);
 
-    //setTodos([...todos, newTodo]);
     setTitle("");
     setDescription("");
     setTaskImage(null);
@@ -157,7 +156,7 @@ const TodoApp: React.FC<TodoAppProps> = ({ session }) => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
-  // --- Frontend-only Update Logic ---
+  // Frontend only Update Logic
   const startEditing = (todo: Todo) => {
     setEditingId(todo.id);
     setEditTitle(todo.title);

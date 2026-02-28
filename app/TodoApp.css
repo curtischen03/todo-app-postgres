@@ -11,22 +11,6 @@
   --border: #334155;
 }
 
-.todo-container {
-  background: var(--surface);
-  padding: 2rem;
-  border-radius: 20px;
-  box-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.3),
-    0 10px 10px -5px rgba(0, 0, 0, 0.2);
-  width: 450px;
-  margin: 60px auto;
-  font-family:
-    "Inter",
-    -apple-system,
-    sans-serif;
-  border: 1px solid var(--border);
-}
-
 h2 {
   color: var(--text-main);
   font-weight: 700;
@@ -140,7 +124,6 @@ h2 {
   color: var(--text-muted);
 }
 
-/* Action Buttons */
 .item-actions {
   display: flex;
   gap: 8px;
@@ -178,7 +161,6 @@ h2 {
   color: white;
 }
 
-/* Edit Mode Containers */
 .edit-mode-container {
   display: flex;
   flex-direction: column;
@@ -209,8 +191,8 @@ h2 {
   gap: 8px;
   padding: 8px 16px;
   background: transparent;
-  color: #94a3b8; /* var(--text-muted) */
-  border: 1px solid #334155; /* var(--border) */
+  color: #94a3b8;
+  border: 1px solid #334155;
   border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 500;
@@ -219,17 +201,11 @@ h2 {
 }
 
 .logout-btn:hover {
-  background: rgba(239, 68, 68, 0.1); /* Subtle red tint */
-  color: #ef4444; /* var(--danger) */
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
   border-color: #ef4444;
 }
 
-.todoImg {
-  height: 100px;
-  width: auto;
-}
-
-/* Modern File Input Styling */
 .inputFile {
   width: 100%;
   padding: 10px;
@@ -243,7 +219,6 @@ h2 {
   margin-top: 10px;
 }
 
-/* Styling the actual button inside the input */
 .inputFile::file-selector-button {
   background-color: var(--primary);
   color: white;
@@ -260,9 +235,70 @@ h2 {
   background-color: var(--primary-hover);
 }
 
-/* Optional: Subtle focus state for accessibility */
 .inputFile:focus {
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.todo-container {
+  background: var(--surface);
+  padding: 1.5rem;
+  border-radius: 20px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+
+  width: 95%;
+  max-width: 500px;
+  margin: 20px auto;
+
+  font-family: "Inter", sans-serif;
+  border: 1px solid var(--border);
+  box-sizing: border-box;
+}
+
+.todoImg {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+@media (max-width: 480px) {
+  .todo-container {
+    padding: 1rem;
+    margin: 10px auto;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .todo-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .item-actions {
+    width: 100%;
+    justify-content: flex-end;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+  }
+
+  .todo-content {
+    padding-right: 0;
+    width: 100%;
+  }
+
+  .edit-actions {
+    justify-content: space-between;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    flex: 1;
+    text-align: center;
+  }
 }

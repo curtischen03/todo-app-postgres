@@ -41,7 +41,6 @@
   font-size: 0.95rem;
 }
 
-/* Segmented Control Toggle */
 .auth-toggle {
   display: flex;
   background: #0f172a;
@@ -69,7 +68,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Form Styles */
 .login-form {
   display: flex;
   flex-direction: column;

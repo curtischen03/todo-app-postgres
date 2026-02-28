@@ -1,3 +1,4 @@
+//npm install @supabase/supabase-js
 import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = process.env.NEXT_PUBLIC_PROJECT_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_API_KEY;
