@@ -9,6 +9,16 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: window.location.origin,
+      },
+    });
+    if (error) console.error("Error with Google login:", error.message);
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (isSignUp) {
@@ -68,6 +78,13 @@ const Login: React.FC = () => {
             Sign Up
           </button>
         </div>
+        <button className="google-btn" onClick={() => handleGoogleLogin()}>
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+            alt="Google"
+          />
+          Continue with Google
+        </button>
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="input-field">

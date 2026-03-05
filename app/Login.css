@@ -152,3 +152,29 @@
 .footer-text span:hover {
   text-decoration: underline;
 }
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  background: white;
+  color: #1e293b;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-bottom: 1.5rem;
+}
+
+.google-btn:hover {
+  background: #f1f5f9;
+}
+
+.google-btn img {
+  width: 20px;
+  height: 20px;
+}
